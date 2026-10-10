@@ -16,6 +16,7 @@ Topic layout:
     fx/<name>/...           anything published by demo/plugin nodes
 """
 import json
+import os
 import time
 import zlib
 
@@ -23,8 +24,12 @@ import cv2
 import numpy as np
 import zmq
 
-PUB_ADDR = "tcp://127.0.0.1:5550"   # publishers connect here (broker XSUB)
-SUB_ADDR = "tcp://127.0.0.1:5551"   # subscribers connect here (broker XPUB)
+# Where the broker runs. On another machine, set RS_HUB_HOST=<jetson-ip> to join this hub.
+HOST = os.environ.get("RS_HUB_HOST", "127.0.0.1")
+PUB_PORT = 5550   # publishers connect here (broker XSUB)
+SUB_PORT = 5551   # subscribers connect here (broker XPUB)
+PUB_ADDR = f"tcp://{HOST}:{PUB_PORT}"
+SUB_ADDR = f"tcp://{HOST}:{SUB_PORT}"
 
 
 def make_pub(ctx=None):

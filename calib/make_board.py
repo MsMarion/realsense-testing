@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Generate the printable ChArUco calibration board.
 
 Writes calib/board.json (the board definition every tool reads) and

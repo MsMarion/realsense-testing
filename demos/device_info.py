@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Enumerate connected RealSense devices: model, firmware, USB, sensors, stream profiles, options.
 
 Usage: python demos/device_info.py [--profiles] [--options]

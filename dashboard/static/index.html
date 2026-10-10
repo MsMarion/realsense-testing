@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RealSense Hub</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script type="importmap">
+    { "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>RealSense Hub</h1>
+    <span id="conn" class="pill bad">disconnected</span>
+    <span id="busSummary" class="muted"></span>
+    <span class="spacer"></span>
+    <span class="muted hint">Click two points on a Color or Depth image to measure · Esc clears</span>
+  </header>
+
+  <main>
+    <section id="cameras">
+      <div id="noCams" class="empty">Waiting for cameras on the bus…</div>
+    </section>
+
+    <section class="row">
+      <div class="panel grow" id="cloudPanel">
+        <div class="panel-head">
+          <h2>3D Point Cloud</h2>
+          <select id="cloudCam"></select>
+          <label class="muted">size <input id="ptSize" type="range" min="1" max="8" value="2"></label>
+          <button id="cloudReset">Reset view</button>
+          <span id="cloudStats" class="muted"></span>
+        </div>
+        <div id="cloud" class="viewport"></div>
+      </div>
+
+      <div class="panel" id="imuPanel">
+        <div class="panel-head">
+          <h2>IMU</h2>
+          <select id="imuCam"></select>
+          <button id="yawReset">Zero yaw</button>
+        </div>
+        <div id="imuEmpty" class="empty small">No IMU on the bus (D435i only)</div>
+        <div id="imuBody" hidden>
+          <div class="imu-top">
+            <div id="cube" class="cube"></div>
+            <div class="imu-readout">
+              <canvas id="bubble" width="130" height="130"></canvas>
+              <div><span class="muted">roll</span> <b id="roll">–</b></div>
+              <div><span class="muted">pitch</span> <b id="pitch">–</b></div>
+              <div><span class="muted">yaw</span> <b id="yaw">–</b></div>
+              <div><span class="muted">|a|</span> <b id="amag">–</b></div>
+            </div>
+          </div>
+          <div class="chart-box"><canvas id="accelChart"></canvas></div>
+          <div class="chart-box"><canvas id="gyroChart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="calibPanel">
+      <div class="panel-head">
+        <h2>Camera-to-camera calibration</h2>
+        <a href="/calib/board" target="_blank">Open printable board ↗</a>
+        <span class="muted hint">Hold the board flat and still where both cameras see it, then capture 10+ samples from different angles.</span>
+      </div>
+      <div class="calib-grid">
+        <div>
+          <h3>Board detection</h3>
+          <table id="boardTable">
+            <thead><tr><th>camera</th><th>status</th><th>corners</th><th>distance</th><th>reproj err</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div>
+          <h3 id="pairTitle">Relative pose (live)</h3>
+          <div id="pairLive" class="pose muted">Board not seen by both cameras.</div>
+          <div class="btns">
+            <button id="capBtn">Capture sample</button>
+            <button id="solveBtn">Solve &amp; save</button>
+            <button id="resetBtn">Reset samples</button>
+            <span id="sampleCount" class="muted"></span>
+          </div>
+          <div id="calibResult" class="pose"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="fxPanel" hidden>
+      <div class="panel-head"><h2>Plugins (fx/*)</h2></div>
+      <div id="fxTiles" class="tiles"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Bus topics</h2></div>
+      <table id="topics">
+        <thead><tr><th>topic</th><th>Hz</th><th>KB/s</th><th>latency ms</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>

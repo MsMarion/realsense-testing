@@ -1,0 +1,7 @@
+pyrealsense2==2.58.4.10922
+pyzmq
+numpy
+opencv-python-headless
+fastapi
+uvicorn
+websockets
